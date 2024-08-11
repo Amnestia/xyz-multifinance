@@ -16,12 +16,13 @@ const (
 )
 
 // ReadJSONConfig read config file with json format
-func (c Config) ReadJSONConfig(name string) (ret Config) {
+func (c Config) ReadJSONConfig(name string, serviceName string) (ret Config) {
 	env := os.Getenv(envKey)
 	ret = c
 	paths := []string{
 		"config/server",
-		fmt.Sprintf("/etc/%s/config/server", name),
+		fmt.Sprintf("cmd/%s/config/server", serviceName),
+		fmt.Sprintf("/etc/%s/config/server", serviceName),
 	}
 	errs := []error{}
 	for _, path := range paths {
@@ -43,12 +44,13 @@ func (c Config) ReadJSONConfig(name string) (ret Config) {
 }
 
 // ReadYAMLConfig read config file with json format
-func (c Config) ReadYAMLConfig(name string) (ret Config) {
+func (c Config) ReadYAMLConfig(name string, serviceName string) (ret Config) {
 	ret = c
 	env := os.Getenv(envKey)
 	paths := []string{
 		"config/server",
-		fmt.Sprintf("/etc/%s/config/server", name),
+		fmt.Sprintf("cmd/%s/config/server", serviceName),
+		fmt.Sprintf("/etc/%s/config/server", serviceName),
 	}
 	errs := []error{}
 	for _, path := range paths {

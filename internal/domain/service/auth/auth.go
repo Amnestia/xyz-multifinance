@@ -10,15 +10,14 @@ import (
 	"github.com/amnestia/xyz-multifinance/internal/domain/constant"
 	authmodel "github.com/amnestia/xyz-multifinance/internal/domain/model/auth"
 	"github.com/amnestia/xyz-multifinance/internal/domain/model/common"
-	"github.com/amnestia/xyz-multifinance/internal/lib/crypto/argon"
 	"github.com/amnestia/xyz-multifinance/internal/lib/paseto"
 )
 
 // Register register new account
-func (svc *Service) Register(ctx context.Context, acc *authmodel.Account) (resp *common.DefaultResponse) {
+func (svc *Service) Register(ctx context.Context, req *authmodel.RegisterRequest) (resp *common.DefaultResponse) {
 	var err error
 	resp = &common.DefaultResponse{HTTPCode: http.StatusCreated}
-	acc.Password, err = argon.GenerateHash(acc.Password, svc.Config.Auth.Pepper)
+	acc, err := buildConsumerRegistrationData(svc, ctx, req)
 	if err != nil {
 		resp = resp.Build(http.StatusInternalServerError, err)
 		return
@@ -45,11 +44,10 @@ func (svc *Service) Register(ctx context.Context, acc *authmodel.Account) (resp 
 }
 
 // Auth authenticate account login
-func (svc *Service) Auth(ctx context.Context, acc *authmodel.Account) (resp *authmodel.LoginResponse) {
+func (svc *Service) Auth(ctx context.Context, req *authmodel.ConsumerAuthRequest) (resp *authmodel.LoginResponse) {
 	resp = &authmodel.LoginResponse{}
 	resp.HTTPCode = http.StatusOK
-
-	a, err := svc.Repo.Auth(ctx, acc.Email)
+	acc, err := getAccount(svc, ctx, req)
 	if err != nil {
 		resp.Build(http.StatusInternalServerError, err)
 		if err == sql.ErrNoRows {
@@ -57,16 +55,14 @@ func (svc *Service) Auth(ctx context.Context, acc *authmodel.Account) (resp *aut
 		}
 		return
 	}
-	valid, err := argon.VerifyHash(acc.Password, a.Password)
+	valid, err := verifyArgonHash(req.Password, acc.Password)
 	if !valid || err != nil {
 		resp.Build(http.StatusNotFound, constant.LoginFailedError{})
 		return
 	}
 
 	payload := paseto.Payload{
-		ID:       a.ID,
-		Username: a.Username,
-		Email:    a.Email,
+		ID: acc.ID,
 	}
 	payload.TokenType = paseto.AccessToken
 	resp.AccessToken, err = svc.Paseto.Generate(payload)

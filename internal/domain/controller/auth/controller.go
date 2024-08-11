@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	authmodel "github.com/amnestia/xyz-multifinance/internal/domain/model/auth"
 	"github.com/amnestia/xyz-multifinance/internal/domain/service"
@@ -20,17 +21,17 @@ func (c *Controller) Auth(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	response := response.NewResponse(ctx)
 
-	req := &authmodel.Account{}
+	req := &authmodel.ConsumerAuthRequest{}
 	err := json.Decode(r.Body, &req)
 	if err != nil {
 		response.SetErrorResponse(http.StatusBadRequest, err, "Invalid Request").WriteJSON(w)
 		return
 	}
-	if req.Email == "" {
-		response.SetErrorResponse(http.StatusBadRequest, fmt.Errorf("Email is required")).WriteJSON(w)
+	if strings.TrimSpace(req.NIK) == "" {
+		response.SetErrorResponse(http.StatusBadRequest, fmt.Errorf("NIK is required")).WriteJSON(w)
 		return
 	}
-	if req.Password == "" {
+	if strings.TrimSpace(req.Password) == "" {
 		response.SetErrorResponse(http.StatusNotFound, fmt.Errorf("Password is required")).WriteJSON(w)
 		return
 	}
@@ -47,7 +48,7 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	response := response.NewResponse(ctx)
 
-	req := &authmodel.Account{}
+	req := &authmodel.RegisterRequest{}
 	err := json.Decode(r.Body, &req)
 	if err != nil {
 		response.SetErrorResponse(http.StatusBadRequest, err).WriteJSON(w)
@@ -63,5 +64,5 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 		response.SetErrorResponse(ret.HTTPCode, ret.Error).WriteJSON(w)
 		return
 	}
-	response.SetResponse(ret.HTTPCode, nil, "successfully registered").WriteJSON(w)
+	response.SetResponse(ret.HTTPCode, nil, "Successfully registered").WriteJSON(w)
 }

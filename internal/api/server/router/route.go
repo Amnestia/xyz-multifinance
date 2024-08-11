@@ -64,5 +64,11 @@ func (r *Router) setMiddleware() {
 // registerRoute register API routes
 func (router *Router) registerRoute() {
 	router.Handler.Get("/ping", router.Controller.PingHandler.Ping)
+	router.Handler.Post("/register", router.Controller.AuthHandler.Register)
+	router.Handler.Post("/login", router.Controller.AuthHandler.Auth)
 
+	router.Handler.Group(func(r chi.Router) {
+		r.Use(router.Auth.Authorize)
+		r.Get("/pingauth", router.Controller.PingHandler.Ping)
+	})
 }

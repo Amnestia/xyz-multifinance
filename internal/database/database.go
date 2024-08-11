@@ -3,6 +3,7 @@ package database
 import (
 	"time"
 
+	_ "github.com/go-sql-driver/mysql" // mysql driver
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 )

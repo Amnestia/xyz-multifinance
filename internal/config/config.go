@@ -2,17 +2,18 @@ package config
 
 import "github.com/amnestia/xyz-multifinance/internal/database"
 
-// Config struct containing config
+// Config config
 type Config struct {
 	App    string `yaml:"name"`
 	Server Server `yaml:"server"`
 
 	Environment string          `json:"environment"`
 	Database    database.Config `json:"database"`
+	Crypt       Crypt           `json:"crypt"`
 	Auth        Auth            `json:"auth"`
 }
 
-// Server struct containing server config
+// Server server config
 type Server struct {
 	Port string `yaml:"port"`
 	Logs struct {
@@ -28,10 +29,22 @@ type Server struct {
 	Origin []string `yaml:"origin"`
 }
 
-// Auth struct containing auth key
+// Auth auth related config
 type Auth struct {
 	PubKey   string `json:"pub_key"`
 	PrivKey  string `json:"priv_key"`
 	LocalKey string `json:"local_key"`
 	Pepper   string `json:"pepper"`
+}
+
+// Crypt encryption related config
+type Crypt struct {
+	AESKey string `json:"aes_key"`
+	HMAC   HMAC   `json:"hmac"`
+}
+
+// HMAC HMAC related config
+type HMAC struct {
+	Key    string `json:"key"`
+	Pepper string `json:"pepper"`
 }

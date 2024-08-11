@@ -10,9 +10,7 @@ import (
 
 // Data struct containing account data from token
 type Data struct {
-	ID       int64
-	Username string
-	Email    string
+	ID int64
 }
 
 // GetData get account data from context inserted from middleware
@@ -23,8 +21,6 @@ func GetData(ctx context.Context) (*Data, error) {
 	}
 	p := payload.(paseto.Payload)
 	return &Data{
-		ID:       p.ID,
-		Username: p.Username,
-		Email:    p.Email,
+		ID: p.ID,
 	}, nil
 }
