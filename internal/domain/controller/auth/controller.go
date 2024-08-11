@@ -28,7 +28,7 @@ func (c *Controller) Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if strings.TrimSpace(req.NIK) == "" {
-		response.SetErrorResponse(http.StatusBadRequest, fmt.Errorf("Email is required")).WriteJSON(w)
+		response.SetErrorResponse(http.StatusBadRequest, fmt.Errorf("NIK is required")).WriteJSON(w)
 		return
 	}
 	if strings.TrimSpace(req.Password) == "" {
@@ -64,5 +64,5 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 		response.SetErrorResponse(ret.HTTPCode, ret.Error).WriteJSON(w)
 		return
 	}
-	response.SetResponse(ret.HTTPCode, nil, "successfully registered").WriteJSON(w)
+	response.SetResponse(ret.HTTPCode, nil, "Successfully registered").WriteJSON(w)
 }

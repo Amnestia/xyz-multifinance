@@ -47,13 +47,14 @@ func New() *Server {
 		return nil
 	}
 
-	controller := getController(cfg, dep)
-
 	// initialize interactor(controller, service)
 	dep.past = paseto.New(cfg)
 	auth := auth.AuthorizationModule{
 		Token: dep.past,
 	}
+
+	controller := getController(cfg, dep)
+
 	// initialize router
 	r := router.New(router.Options{}, cfg, auth, controller)
 	return &Server{

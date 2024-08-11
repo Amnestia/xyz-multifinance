@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/amnestia/xyz-multifinance/internal/domain/constant"
 	authmodel "github.com/amnestia/xyz-multifinance/internal/domain/model/auth"
 	"github.com/amnestia/xyz-multifinance/pkg/logger"
 )
@@ -17,11 +16,11 @@ func (svc *Service) getAccount(ctx context.Context, acc *authmodel.ConsumerAuthR
 	}
 	ret, err = svc.Repo.Auth(ctx, acc.NIK)
 	if err != nil {
-		err = logger.ErrorWrap(err, "getConsumerData.RepoAuth")
 		if err == sql.ErrNoRows {
-			err = constant.LoginFailedError{}
+			err = sql.ErrNoRows
 			return
 		}
+		err = logger.ErrorWrap(err, "getConsumerData.RepoAuth")
 		return
 	}
 	return
@@ -34,39 +33,39 @@ func (svc *Service) buildConsumerRegistrationData(ctx context.Context, req *auth
 		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.HMACGetHash")
 		return
 	}
-	acc.NIK, err = encryptAES(acc.NIK, svc.Config.Crypt.AESKey)
+	acc.NIK, err = encryptAES(req.NIK, svc.Config.Crypt.AESKey)
 	if err != nil {
 		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
 		return
 	}
-	acc.Fullname, err = encryptAES(acc.Fullname, svc.Config.Crypt.AESKey)
+	acc.Fullname, err = encryptAES(req.Fullname, svc.Config.Crypt.AESKey)
 	if err != nil {
-		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
+		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptFullname")
 		return
 	}
-	acc.LegalName, err = encryptAES(acc.LegalName, svc.Config.Crypt.AESKey)
+	acc.LegalName, err = encryptAES(req.LegalName, svc.Config.Crypt.AESKey)
 	if err != nil {
-		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
+		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptLegalName")
 		return
 	}
-	acc.DateOfBirth, err = encryptAES(acc.DateOfBirth, svc.Config.Crypt.AESKey)
+	acc.DateOfBirth, err = encryptAES(req.DateOfBirth, svc.Config.Crypt.AESKey)
 	if err != nil {
-		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
+		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptDOB")
 		return
 	}
-	acc.PlaceOfBirth, err = encryptAES(acc.PlaceOfBirth, svc.Config.Crypt.AESKey)
+	acc.PlaceOfBirth, err = encryptAES(req.PlaceOfBirth, svc.Config.Crypt.AESKey)
 	if err != nil {
-		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
+		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptPlaceOfBirth")
 		return
 	}
-	acc.IdentityPhoto, err = encryptAES(acc.IdentityPhoto, svc.Config.Crypt.AESKey)
+	acc.IdentityPhoto, err = encryptAES(req.IdentityPhoto, svc.Config.Crypt.AESKey)
 	if err != nil {
-		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
+		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptIdentityPhoto")
 		return
 	}
-	acc.Photo, err = encryptAES(acc.Photo, svc.Config.Crypt.AESKey)
+	acc.Photo, err = encryptAES(req.Photo, svc.Config.Crypt.AESKey)
 	if err != nil {
-		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptNIK")
+		err = logger.ErrorWrap(err, "buildConsumerRegistrationData.AESEncryptPhoto")
 		return
 	}
 	acc.Password, err = generateArgonHash(req.Password, svc.Config.Auth.Pepper)

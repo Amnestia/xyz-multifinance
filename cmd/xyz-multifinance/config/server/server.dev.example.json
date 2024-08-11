@@ -7,7 +7,7 @@
     "pepper": "pepper"
   },
   "crypt": {
-    "key": "somekey",
+    "aes_key": "somekey",
 	"hmac":{
 		"key":"key",
 		"pepper":"pepper"

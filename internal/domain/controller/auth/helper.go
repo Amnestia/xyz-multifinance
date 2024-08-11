@@ -59,10 +59,10 @@ func validatePIN(pin string) (err error) {
 
 func validatePassword(password string) (err error) {
 	if len(password) < 16 {
-		return fmt.Errorf("Password should be at least 8 characters")
+		return fmt.Errorf("Password should be at least 16 characters")
 	}
 	if len(password) > 256 {
-		return fmt.Errorf("Password should be at least 8 characters")
+		return fmt.Errorf("Password should not be more than 256 characters")
 	}
 	return
 }

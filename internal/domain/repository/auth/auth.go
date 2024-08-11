@@ -17,15 +17,15 @@ type Repository struct {
 
 // Auth get credentials from database
 func (repo *Repository) Auth(ctx context.Context, nik string) (*authmodel.Account, error) {
-	acc := &authmodel.Account{}
+	acc := authmodel.Account{}
 	err := repo.DB.Slave.GetContext(ctx, &acc, auth, nik)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return acc, err
+			return &acc, err
 		}
-		return acc, logger.ErrorWrap(err, "Auth", "GetContext")
+		return &acc, logger.ErrorWrap(err, "Auth", "GetContext")
 	}
-	return acc, nil
+	return &acc, nil
 }
 
 // RegisterNewAccount register new account to database

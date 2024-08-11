@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/amnestia/xyz-multifinance/internal/lib/paseto"
+	"github.com/amnestia/xyz-multifinance/pkg/logger"
 	"github.com/amnestia/xyz-multifinance/pkg/response"
 )
 
@@ -26,7 +27,8 @@ func (a *AuthorizationModule) Authorize(next http.Handler) http.Handler {
 		token := strings.Replace(authHeader, "Bearer ", "", -1)
 		payload, err := a.Token.Extract(token)
 		if err != nil {
-			response.NewResponse(ctx).SetResponse(http.StatusUnauthorized, "", err.Error()).WriteJSON(w)
+			logger.Logger.Error().Msgf("%d: %v", http.StatusUnauthorized, logger.ErrorWrap(err, "AuthMiddleware.ExtractToken"))
+			response.NewResponse(ctx).SetResponse(http.StatusUnauthorized, "", "").WriteJSON(w)
 			return
 		}
 		if payload.TokenType != paseto.AccessToken {

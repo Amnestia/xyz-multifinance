@@ -52,14 +52,16 @@ func (r *Response) SetResponse(code int, body any, msg string) *Response {
 }
 
 func (r *Response) WriteJSON(w http.ResponseWriter) {
+	if r.StatusCode/100 == 5 {
+		logger.Logger.Error().Msg(r.Error)
+	}
 	b, _ := json.Marshal(r.Return())
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(r.StatusCode)
 	_, err := w.Write(b)
 	if err != nil {
-		logger.Logger.Error().Err(logger.ErrorWrap(err, "WriteJSON.Write"))
+		logger.Logger.Error().Err(logger.ErrorWrap(err, "WriteJSON.Write")).Send()
 	}
-	logger.Logger.Error().Send()
 }
 
 // SetErrorResponse set error response attribute
@@ -68,7 +70,7 @@ func (r *Response) SetErrorResponse(code int, err error, msg ...string) *Respons
 	if len(msg) > 0 {
 		message = msg[0]
 	}
-	return r.SetMessage(message).SetStatusCode(code)
+	return r.SetError(err.Error()).SetMessage(message).SetStatusCode(code)
 }
 
 // Return add default error and message for response
@@ -82,6 +84,7 @@ func (r *Response) Return() *Response {
 		}
 	}
 	if r.StatusCode/100 == 5 {
+		r.SetError("Internal Server Error")
 		r.SetMessage("Internal Server Error")
 	}
 	return r

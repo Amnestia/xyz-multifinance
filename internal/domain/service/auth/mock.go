@@ -35,8 +35,4 @@ var (
 	encryptAES = func(s string, key string) (string, error) {
 		return aes.Encrypt(s, key)
 	}
-
-	decryptAES = func(s string, key string) (string, error) {
-		return aes.Decrypt(s, key)
-	}
 )

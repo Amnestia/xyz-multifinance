@@ -23,7 +23,7 @@ const (
 	`
 
 	insertNewAccount = `
-		INSERT INTO account(
+		INSERT INTO consumer(
 			nik,
   			nik_index,
   			password,
