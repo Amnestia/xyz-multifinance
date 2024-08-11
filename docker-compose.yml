@@ -1,0 +1,7 @@
+services:
+  xyz-multifinance:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    ports:
+      - '12021:80'

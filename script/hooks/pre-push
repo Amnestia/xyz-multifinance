@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "===================== Pre-push hook ====================="
+go clean -testcache -race -r
+make check
+if [[ $? != 0 ]]; then
+	echo "===================== Failed ====================="
+	exit 1
+fi
+echo "===================== PASS ====================="
+exit 0
+

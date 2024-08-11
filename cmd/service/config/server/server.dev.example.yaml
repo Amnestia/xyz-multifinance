@@ -1,0 +1,13 @@
+name: xyz-multifinance
+server:
+  logs:
+    info: /var/log/xyz-multifinance/xyz-multifinance.info.log
+    error: /var/log/xyz-multifinance/xyz-multifinance.error.log
+  port: "80"
+  timeout: 10 # seconds
+  limiter:
+    rate: 20
+    burst: 100
+    expiration: 3 # minutes
+  origin:
+    - "*"
