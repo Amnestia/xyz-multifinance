@@ -8,10 +8,10 @@
   },
   "crypt": {
     "aes_key": "somekey",
-	"hmac":{
-		"key":"key",
-		"pepper":"pepper"
-	}
+    "hmac": {
+      "key": "key",
+      "pepper": "pepper"
+    }
   },
   "database": {
     "slave": "user:password@tcp(host:port)/db",
