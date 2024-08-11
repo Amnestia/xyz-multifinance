@@ -16,23 +16,32 @@ type Repository struct {
 }
 
 // Auth get credentials from database
-func (repo *Repository) Auth(ctx context.Context, email string) (*authmodel.Account, error) {
+func (repo *Repository) Auth(ctx context.Context, nik string) (*authmodel.Account, error) {
 	acc := &authmodel.Account{}
-	err := repo.DB.Slave.QueryRowxContext(ctx, auth, email).Scan(&acc.Email, &acc.Password)
+	err := repo.DB.Slave.GetContext(ctx, &acc, auth, nik)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return acc, err
 		}
-		return acc, logger.ErrorWrap(err, "repo", "Failed on getting account")
+		return acc, logger.ErrorWrap(err, "Auth", "GetContext")
 	}
 	return acc, nil
 }
 
 // RegisterNewAccount register new account to database
 func (repo *Repository) RegisterNewAccount(ctx context.Context, tx *sqlx.Tx, acc *authmodel.Account) (id int64, err error) {
-	err = tx.GetContext(ctx, &id, insertNewAccount, &acc)
+	q, args, err := sqlx.Named(insertNewAccount, &acc)
 	if err != nil {
-		return -1, logger.ErrorWrap(err, "repo", "Failed on creating new account")
+		return -1, logger.ErrorWrap(err, "RegisterNewAccount", "SQLXNamed")
+	}
+	q = repo.DB.Slave.Rebind(q)
+	res, err := tx.ExecContext(ctx, q, args...)
+	if err != nil {
+		return -1, logger.ErrorWrap(err, "RegisterNewAccount", "ExecContext")
+	}
+	id, err = res.LastInsertId()
+	if err != nil {
+		return -1, logger.ErrorWrap(err, "RegisterNewAccount", "LastInsertId")
 	}
 	return
 }

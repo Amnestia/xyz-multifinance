@@ -3,25 +3,54 @@ package authrepo
 const (
 	auth = `
 		SELECT
-			username,
-			acc_email,
-			acc_password
+			nik,
+			nik_index,
+			password,
+			pin,
+			fullname,
+			legal_name,
+			date_of_birth,
+			place_of_birth,
+			salary,
+			identity_photo,
+			photo
 		FROM
-			account
+			consumer
 		WHERE
-			acc_email = $1
+			nik_index = ?
 			AND deleted_at IS NULL
 		LIMIT 1
 	`
 
 	insertNewAccount = `
 		INSERT INTO account(
-			username,
-			acc_email,
-			acc_password,
+			nik,
+  			nik_index,
+  			password,
+  			pin,
+  			fullname,
+  			legal_name,
+  			date_of_birth,
+  			place_of_birth,
+  			salary,
+  			identity_photo,
+  			photo,
 			created_by,
 			updated_by
-		) VALUES (:username, :email, :password, :email, :email)
-		RETURNING id
+		) VALUES (
+			:nik,
+  			:nik_index,
+  			:password,
+  			:pin,
+  			:fullname,
+  			:legal_name,
+  			:date_of_birth,
+  			:place_of_birth,
+  			:salary,
+  			:identity_photo,
+  			:photo,
+			:fullname,
+			:fullname
+		)
 	`
 )

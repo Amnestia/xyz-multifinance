@@ -3,5 +3,33 @@ services:
     build:
       context: .
       dockerfile: docker/dev.Dockerfile
+      args:
+        SERVICE_NAME: xyz-multifinance
+    volumes:
+      - ./logs:/var/log/xyz-multifinance/
+    depends_on:
+      xyz-multifinance-db:
+        condition: service_healthy
     ports:
       - '12021:80'
+
+  xyz-multifinance-db:
+    build:
+      context: .
+      dockerfile: docker/db/dev.Dockerfile
+    ports:
+    - "10001:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+    env_file:
+      - ./docker/db/db.env
+    volumes:
+      - ./docker/db/migration/:/docker-entrypoint-initdb.d
+      - xyz_multifinance_db:/var/lib/postgresql/data/
+
+volumes:
+  xyz_multifinance_db:

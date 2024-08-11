@@ -28,18 +28,20 @@ func New() *Server {
 	var err error
 
 	// get config
+	serviceName := "xyz-multifinance"
 	cfg := config.Config{}
-	cfg = cfg.ReadJSONConfig("server")
-	cfg = cfg.ReadYAMLConfig("server")
+	cfg = cfg.ReadJSONConfig("server", serviceName)
+	cfg = cfg.ReadYAMLConfig("server", serviceName)
 	err = logger.InitLogger(cfg.App, cfg.Server.Logs.Info, cfg.Server.Logs.Error)
 	if err != nil {
 		log.Fatal("Error on creating log files : ", err)
 		return nil
 	}
+	log.Println("================================Starting Server=====================================")
 
 	// initialize db, etc
 	dep := dependency{}
-	dep.db, err = database.New(cfg.Database, "postgres")
+	dep.db, err = database.New(cfg.Database, "mysql")
 	if err != nil {
 		log.Fatal("Error on connecting to database : ", err)
 		return nil

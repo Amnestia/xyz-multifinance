@@ -14,6 +14,6 @@ type PingServicer interface {
 
 // AuthServicer interface
 type AuthServicer interface {
-	Register(context.Context, *authmodel.Account) *common.DefaultResponse
-	Auth(context.Context, *authmodel.Account) *authmodel.LoginResponse
+	Register(context.Context, *authmodel.RegisterRequest) *common.DefaultResponse
+	Auth(context.Context, *authmodel.ConsumerAuthRequest) *authmodel.LoginResponse
 }

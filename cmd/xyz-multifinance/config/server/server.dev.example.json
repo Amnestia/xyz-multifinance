@@ -7,10 +7,14 @@
     "pepper": "pepper"
   },
   "crypt": {
-    "key": "somekey"
+    "key": "somekey",
+	"hmac":{
+		"key":"key",
+		"pepper":"pepper"
+	}
   },
   "database": {
-    "slave": "postgres://user:password@host:port/db",
-    "master": "postgres://user:password@host:port/db"
+    "slave": "user:password@tcp(host:port)/db",
+    "master": "user:password@tcp(host:port)/db"
   }
 }
