@@ -49,11 +49,11 @@ func New() *Server {
 
 	// initialize interactor(controller, service)
 	dep.past = paseto.New(cfg)
-	auth := auth.AuthorizationModule{
-		Token: dep.past,
-	}
-
 	controller := getController(cfg, dep)
+	auth := auth.AuthorizationModule{
+		Token:    dep.past,
+		AuthRepo: dep.authRepo,
+	}
 
 	// initialize router
 	r := router.New(router.Options{}, cfg, auth, controller)

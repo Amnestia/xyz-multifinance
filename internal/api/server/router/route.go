@@ -71,4 +71,10 @@ func (router *Router) registerRoute() {
 		r.Use(router.Auth.Authorize)
 		r.Get("/pingauth", router.Controller.PingHandler.Ping)
 	})
+
+	router.Handler.Group(func(r chi.Router) {
+		r.Use(router.Auth.AuthorizeAPIKey)
+		r.Post("/transaction", router.Controller.TransactionHandler.Auth)
+	})
+
 }

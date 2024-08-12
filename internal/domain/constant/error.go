@@ -6,3 +6,10 @@ type LoginFailedError struct{}
 func (LoginFailedError) Error() string {
 	return "Email and Password cannot be found"
 }
+
+// OverlimitError error on failed login
+type OverlimitError struct{}
+
+func (OverlimitError) Error() string {
+	return "Limit for this transaction is not enough"
+}

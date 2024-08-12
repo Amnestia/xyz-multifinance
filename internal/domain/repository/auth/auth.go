@@ -45,3 +45,16 @@ func (repo *Repository) RegisterNewAccount(ctx context.Context, tx *sqlx.Tx, acc
 	}
 	return
 }
+
+// GetPartner get partner credentials by client id
+func (repo *Repository) GetPartner(ctx context.Context, clientID string) (*authmodel.Partner, error) {
+	acc := authmodel.Partner{}
+	err := repo.DB.Slave.GetContext(ctx, &acc, getPartner, clientID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return &acc, err
+		}
+		return &acc, logger.ErrorWrap(err, "GetPartner.GetContext")
+	}
+	return &acc, nil
+}
