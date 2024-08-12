@@ -17,19 +17,28 @@ func (a *AuthorizationModule) AuthorizeAPIKey(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		clientID := strings.TrimSpace(r.Header.Get("X-Client-ID"))
+		if len(clientID) < 1 {
+			response.NewResponse(ctx).SetResponse(http.StatusUnauthorized, "", "Unknown client").WriteJSON(w)
+			return
+		}
+		apiKey := strings.TrimSpace(r.Header.Get("X-API-Key"))
+		if len(apiKey) < 1 {
+			response.NewResponse(ctx).SetResponse(http.StatusUnauthorized, "", "Unknown client").WriteJSON(w)
+			return
+		}
+
 		partner, err := a.AuthRepo.GetPartner(ctx, clientID)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				response.NewResponse(ctx).SetResponse(http.StatusUnauthorized, "", "Unknown client").WriteJSON(w)
 				return
 			}
-			response.NewResponse(ctx).SetResponse(http.StatusInternalServerError, "", logger.ErrorWrap(err, "AuthorizeAPIKey.GetPartner").Error()).WriteJSON(w)
+			response.NewResponse(ctx).SetError(logger.ErrorWrap(err, "AuthorizeAPIKey.GetPartner").Error()).SetResponse(http.StatusInternalServerError, "", "").WriteJSON(w)
 			return
 		}
-		apiKey := r.Header.Get("X-API-Key")
-		dec, err := aes.Decrypt(partner.APIKey, "")
+		dec, err := aes.Decrypt(partner.APIKey, a.Config.Crypt.AESKey)
 		if err != nil {
-			response.NewResponse(ctx).SetResponse(http.StatusInternalServerError, "", logger.ErrorWrap(err, "AuthorizeAPIKey.DecryptKey").Error()).WriteJSON(w)
+			response.NewResponse(ctx).SetError(logger.ErrorWrap(err, "AuthorizeAPIKey.DecryptKey").Error()).SetResponse(http.StatusInternalServerError, "", "").WriteJSON(w)
 			return
 		}
 		if apiKey != dec {

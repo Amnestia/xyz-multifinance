@@ -17,6 +17,8 @@ type PingServicer interface {
 type AuthServicer interface {
 	Register(context.Context, *authmodel.RegisterRequest) *common.DefaultResponse
 	Auth(context.Context, *authmodel.ConsumerAuthRequest) *authmodel.LoginResponse
+
+	CreateNewPartner(ctx context.Context, req *authmodel.Partner) (resp *authmodel.NewPartnerResponse)
 }
 
 // TransactionServicer interface

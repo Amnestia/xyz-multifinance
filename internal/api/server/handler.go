@@ -22,7 +22,7 @@ type dependency struct {
 	past *paseto.PASTHandle
 }
 
-func getController(cfg config.Config, dep dependency) *controller.Controller {
+func getController(cfg config.Config, dep *dependency) *controller.Controller {
 	pingSvc := &pingsvc.Service{}
 	pingCtrl := ping.Controller{
 		PingSvc: pingSvc,

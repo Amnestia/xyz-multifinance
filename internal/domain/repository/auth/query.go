@@ -3,6 +3,7 @@ package authrepo
 const (
 	auth = `
 		SELECT
+			id,
 			nik,
 			nik_index,
 			password,
@@ -51,6 +52,24 @@ const (
   			:photo,
 			:fullname,
 			:fullname
+		)
+	`
+
+	insertNewPartner = `
+		INSERT INTO partner(
+			name,
+			client_id,
+			api_key,
+			webhook,
+			created_by,
+			updated_by
+		) VALUES (
+			:name,
+			:client_id,
+			:api_key,
+			:webhook,
+			:name,
+			:name
 		)
 	`
 

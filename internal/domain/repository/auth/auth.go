@@ -46,6 +46,24 @@ func (repo *Repository) RegisterNewAccount(ctx context.Context, tx *sqlx.Tx, acc
 	return
 }
 
+// RegisterNewPartner register new partner to database
+func (repo *Repository) RegisterNewPartner(ctx context.Context, tx *sqlx.Tx, acc *authmodel.Partner) (id int64, err error) {
+	q, args, err := sqlx.Named(insertNewPartner, &acc)
+	if err != nil {
+		return -1, logger.ErrorWrap(err, "RegisterNewPartner", "SQLXNamed")
+	}
+	q = repo.DB.Slave.Rebind(q)
+	res, err := tx.ExecContext(ctx, q, args...)
+	if err != nil {
+		return -1, logger.ErrorWrap(err, "RegisterNewPartner", "ExecContext")
+	}
+	id, err = res.LastInsertId()
+	if err != nil {
+		return -1, logger.ErrorWrap(err, "RegisterNewPartner", "LastInsertId")
+	}
+	return
+}
+
 // GetPartner get partner credentials by client id
 func (repo *Repository) GetPartner(ctx context.Context, clientID string) (*authmodel.Partner, error) {
 	acc := authmodel.Partner{}
