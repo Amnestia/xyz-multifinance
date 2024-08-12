@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/amnestia/xyz-multifinance/internal/config"
 	"github.com/amnestia/xyz-multifinance/internal/domain/repository"
 	"github.com/amnestia/xyz-multifinance/internal/lib/paseto"
 	"github.com/amnestia/xyz-multifinance/pkg/logger"
@@ -13,6 +14,7 @@ import (
 
 // AuthorizationModule auth module
 type AuthorizationModule struct {
+	Config   config.Config
 	AuthRepo repository.AuthRepository
 	Token    paseto.Handler
 }

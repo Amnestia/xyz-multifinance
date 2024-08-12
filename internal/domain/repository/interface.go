@@ -20,6 +20,8 @@ type AuthRepository interface {
 	Repositorier
 	Auth(ctx context.Context, email string) (*authmodel.Account, error)
 	RegisterNewAccount(ctx context.Context, tx *sqlx.Tx, acc *authmodel.Account) (id int64, err error)
+
+	RegisterNewPartner(ctx context.Context, tx *sqlx.Tx, acc *authmodel.Partner) (id int64, err error)
 	GetPartner(ctx context.Context, clientID string) (*authmodel.Partner, error)
 }
 

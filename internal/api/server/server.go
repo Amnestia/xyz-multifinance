@@ -40,7 +40,7 @@ func New() *Server {
 	log.Println("================================Starting Server=====================================")
 
 	// initialize db, etc
-	dep := dependency{}
+	dep := &dependency{}
 	dep.db, err = database.New(cfg.Database, "mysql")
 	if err != nil {
 		log.Fatal("Error on connecting to database : ", err)
@@ -51,6 +51,7 @@ func New() *Server {
 	dep.past = paseto.New(cfg)
 	controller := getController(cfg, dep)
 	auth := auth.AuthorizationModule{
+		Config:   cfg,
 		Token:    dep.past,
 		AuthRepo: dep.authRepo,
 	}

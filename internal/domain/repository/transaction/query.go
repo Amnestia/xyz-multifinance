@@ -44,7 +44,7 @@ var (
 			:monthly_amount,
 			:duration,
 			:interest,
-			:status
+			:status,
 			:created_by,
 			:updated_by
 		)
@@ -54,13 +54,13 @@ var (
 		INSERT INTO credit_payment_installment(
 			payment_id,
 			amount,
-			status
+			status,
 			created_by,
 			updated_by
 		) VALUES (
 			:payment_id,
 			:amount,
-			:status
+			:status,
 			:created_by,
 			:updated_by
 		)
@@ -86,9 +86,13 @@ var (
 	getOngoingPayment = `
 		SELECT
 			id,
-			payment_id,
+			transaction_id,
+			consumer_id,
+			total_amount,
+			monthly_amount,
 			duration,
-			amount
+			interest,
+			status
 		FROM
 			credit_payment
 		WHERE
@@ -101,8 +105,9 @@ var (
 	getOngoingPaymentInstallment = `
 		SELECT
 			id,
-			consumer_id,
-			amount
+			payment_id,
+			amount,
+			status
 		FROM
 			credit_payment_installment
 		WHERE

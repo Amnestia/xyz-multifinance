@@ -7,3 +7,10 @@ type LoginResponse struct {
 	TokenData
 	common.DefaultResponse
 }
+
+// NewPartnerResponse response returned on creating a new partner
+type NewPartnerResponse struct {
+	ClientID string
+	APIKey   string
+	common.DefaultResponse
+}

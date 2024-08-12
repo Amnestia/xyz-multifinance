@@ -4,7 +4,7 @@ package constant
 type LoginFailedError struct{}
 
 func (LoginFailedError) Error() string {
-	return "Email and Password cannot be found"
+	return "Unknown user credentials"
 }
 
 // OverlimitError error on failed login

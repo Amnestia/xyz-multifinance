@@ -66,3 +66,22 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	}
 	response.SetResponse(ret.HTTPCode, nil, "Successfully registered").WriteJSON(w)
 }
+
+// RegisterNewPartner register new account
+func (c *Controller) RegisterNewPartner(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	response := response.NewResponse(ctx)
+
+	req := &authmodel.Partner{}
+	err := json.Decode(r.Body, &req)
+	if err != nil {
+		response.SetErrorResponse(http.StatusBadRequest, err).WriteJSON(w)
+		return
+	}
+	ret := c.AuthSvc.CreateNewPartner(ctx, req)
+	if ret.Error != nil {
+		response.SetErrorResponse(ret.HTTPCode, ret.Error).WriteJSON(w)
+		return
+	}
+	response.SetResponse(ret.HTTPCode, map[string]string{"api_key": ret.APIKey, "client_id": ret.ClientID}, "Successfully created").WriteJSON(w)
+}
