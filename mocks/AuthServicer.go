@@ -36,6 +36,26 @@ func (_m *AuthServicer) Auth(_a0 context.Context, _a1 *authmodel.ConsumerAuthReq
 	return r0
 }
 
+// CreateNewPartner provides a mock function with given fields: ctx, req
+func (_m *AuthServicer) CreateNewPartner(ctx context.Context, req *authmodel.Partner) *authmodel.NewPartnerResponse {
+	ret := _m.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateNewPartner")
+	}
+
+	var r0 *authmodel.NewPartnerResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *authmodel.Partner) *authmodel.NewPartnerResponse); ok {
+		r0 = rf(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*authmodel.NewPartnerResponse)
+		}
+	}
+
+	return r0
+}
+
 // Register provides a mock function with given fields: _a0, _a1
 func (_m *AuthServicer) Register(_a0 context.Context, _a1 *authmodel.RegisterRequest) *common.DefaultResponse {
 	ret := _m.Called(_a0, _a1)
