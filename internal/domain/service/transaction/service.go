@@ -55,7 +55,7 @@ func (svc *Service) CreateNewTransaction(ctx context.Context, req *transactionmo
 		resp = resp.Build(http.StatusInternalServerError, err)
 		return
 	}
-	transactionID, err := svc.Repo.CreateNewTransaction(ctx, tx, transactionmodel.Transaction{
+	transactionID, err := svc.Repo.CreateNewTransaction(ctx, tx, &transactionmodel.Transaction{
 		ContractNumber:   req.ContractNumber,
 		AssetName:        req.AssetName,
 		ConsumerID:       acc.ID,
@@ -69,7 +69,7 @@ func (svc *Service) CreateNewTransaction(ctx context.Context, req *transactionmo
 		resp = resp.Build(http.StatusInternalServerError, err)
 		return
 	}
-	paymentID, err := svc.Repo.CreateNewPayment(ctx, tx, transactionmodel.Payment{
+	paymentID, err := svc.Repo.CreateNewPayment(ctx, tx, &transactionmodel.Payment{
 		TransactionID: transactionID,
 		ConsumerID:    acc.ID,
 		TotalAmount:   req.OTR + req.AdminFee,
@@ -82,7 +82,7 @@ func (svc *Service) CreateNewTransaction(ctx context.Context, req *transactionmo
 		resp = resp.Build(http.StatusInternalServerError, err)
 		return
 	}
-	_, err = svc.Repo.CreateNewPaymentInstallment(ctx, tx, transactionmodel.PaymentInstallment{
+	_, err = svc.Repo.CreateNewPaymentInstallment(ctx, tx, &transactionmodel.PaymentInstallment{
 		PaymentID: paymentID,
 		Amount:    req.TotalInstallment,
 		Status:    constant.PaymentUnpaidStatus,

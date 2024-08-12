@@ -27,9 +27,9 @@ type AuthRepository interface {
 type TransactionRepository interface {
 	Repositorier
 
-	CreateNewTransaction(ctx context.Context, tx *sqlx.Tx, req transactionmodel.Transaction) (ret int64, err error)
-	CreateNewPayment(ctx context.Context, tx *sqlx.Tx, req transactionmodel.Payment) (ret int64, err error)
-	CreateNewPaymentInstallment(ctx context.Context, tx *sqlx.Tx, req transactionmodel.PaymentInstallment) (ret int64, err error)
+	CreateNewTransaction(ctx context.Context, tx *sqlx.Tx, req *transactionmodel.Transaction) (ret int64, err error)
+	CreateNewPayment(ctx context.Context, tx *sqlx.Tx, req *transactionmodel.Payment) (ret int64, err error)
+	CreateNewPaymentInstallment(ctx context.Context, tx *sqlx.Tx, req *transactionmodel.PaymentInstallment) (ret int64, err error)
 
 	GetLimit(ctx context.Context, req transactionmodel.LookupPayload) (ret transactionmodel.Limit, err error)
 	GetOngoingPayment(ctx context.Context, req transactionmodel.LookupPayload) (ret []transactionmodel.Payment, err error)
