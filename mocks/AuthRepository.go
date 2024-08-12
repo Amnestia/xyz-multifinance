@@ -153,6 +153,34 @@ func (_m *AuthRepository) RegisterNewAccount(ctx context.Context, tx *sqlx.Tx, a
 	return r0, r1
 }
 
+// RegisterNewPartner provides a mock function with given fields: ctx, tx, acc
+func (_m *AuthRepository) RegisterNewPartner(ctx context.Context, tx *sqlx.Tx, acc *authmodel.Partner) (int64, error) {
+	ret := _m.Called(ctx, tx, acc)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RegisterNewPartner")
+	}
+
+	var r0 int64
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sqlx.Tx, *authmodel.Partner) (int64, error)); ok {
+		return rf(ctx, tx, acc)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *sqlx.Tx, *authmodel.Partner) int64); ok {
+		r0 = rf(ctx, tx, acc)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *sqlx.Tx, *authmodel.Partner) error); ok {
+		r1 = rf(ctx, tx, acc)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // RollbackOnError provides a mock function with given fields: tx, err
 func (_m *AuthRepository) RollbackOnError(tx *sqlx.Tx, err error) error {
 	ret := _m.Called(tx, err)
