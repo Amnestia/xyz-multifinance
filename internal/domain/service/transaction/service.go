@@ -16,7 +16,7 @@ func (svc *Service) CreateNewTransaction(ctx context.Context, req *transactionmo
 	resp = &common.DefaultResponse{HTTPCode: http.StatusCreated}
 	partner, err := getPartnerData(ctx)
 	if err != nil {
-		err = logger.ErrorWrap(err, "CreateNewTransaction.HMACGetHash")
+		err = logger.ErrorWrap(err, "CreateNewTransaction.GetPartnerData")
 		resp.Build(http.StatusInternalServerError, err)
 		return
 	}
