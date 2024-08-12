@@ -53,4 +53,19 @@ const (
 			:fullname
 		)
 	`
+
+	getPartner = `
+		SELECT
+			id,
+			name,
+			client_id,
+			api_key,
+			webhook
+		FROM
+			partner
+		WHERE
+			client_id = ?
+			AND deleted_at IS NULL
+		LIMIT 1
+	`
 )
